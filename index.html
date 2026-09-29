@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Recurso educativo interactivo de Ciudadanía Digital para 4.º de primaria: Detectives Digitales. Resuelve casos, analiza pistas y aprende a tomar buenas decisiones en la red.">
+  <meta name="keywords" content="ciudadanía digital, detectives digitales, educación primaria, pensamiento crítico, seguridad digital, privacidad, respeto digital">
+  <title>🔎 Detectives Digitales | Aprende a tomar buenas decisiones en el mundo digital</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- CONTENEDOR PRINCIPAL DE LA APLICACIÓN -->
+  <div id="detective-app" class="detective-theme">
+    
+    <!-- BARRA SUPERIOR / HUD DEL DETECTIVE -->
+    <header id="main-hud" class="hud-bar" role="banner">
+      <div class="hud-left">
+        <button id="btn-back-dossier" class="btn-hud" title="Volver al Tablero de Casos" aria-label="Volver al menú de casos">
+          <span class="hud-icon">📁</span>
+          <span class="hud-text">Expedientes</span>
+        </button>
+        <div class="case-badge-active" id="hud-active-case-tag">
+          <span class="badge-dot"></span>
+          <span id="hud-case-name">Cuartel Central</span>
+        </div>
+      </div>
+
+      <div class="hud-center">
+        <!-- Indicador de Estrellas de Investigación -->
+        <div class="hud-pill star-pill" title="Estrellas de Deducción ganadas">
+          <span class="pill-icon">⭐</span>
+          <span class="pill-number" id="hud-stars-count">0</span>
+          <span class="pill-label">Estrellas</span>
+        </div>
+
+        <!-- Botón de Solicitar Pista -->
+        <button id="btn-hint" class="btn-hud btn-hint" title="Solicitar pista del caso (-1 estrella de bonificación)" aria-label="Solicitar pista">
+          <span class="hud-icon">🔎</span>
+          <span class="hud-text">Pista</span>
+          <span class="hint-cost-tag">-1⭐</span>
+        </button>
+      </div>
+
+      <div class="hud-right">
+        <!-- Botón Ver Habilidades -->
+        <button id="btn-skills" class="btn-hud" title="Ver mi Tablero de Habilidades Digitales" aria-label="Ver habilidades">
+          <span class="hud-icon">📊</span>
+          <span class="hud-text">Habilidades</span>
+        </button>
+
+        <!-- Botón Modo Docente -->
+        <button id="btn-teacher-view" class="btn-hud btn-teacher" title="Panel Pedagógico para el Docente" aria-label="Modo Docente">
+          <span class="hud-icon">🧑‍🏫</span>
+          <span class="hud-text">Docente</span>
+        </button>
+
+        <!-- Sonido -->
+        <button id="btn-sound-toggle" class="btn-hud btn-icon-only" title="Activar / Desactivar Sonido" aria-label="Alternar Sonido">
+          <span id="sound-indicator-icon">🔊</span>
+        </button>
+
+        <!-- Reiniciar -->
+        <button id="btn-reset-app" class="btn-hud btn-icon-only btn-danger" title="Reiniciar progreso de casos" aria-label="Reiniciar aplicación">
+          <span>🔄</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ÁREA DE CONTENIDO DINÁMICO (VISTAS) -->
+    <main id="app-viewport">
+
+      <!-- ============================================================ -->
+      <!-- VISTA 1: TABLERO CENTRAL DE EXPEDIENTES (PORTADA / MENÚ)      -->
+      <!-- ============================================================ -->
+      <section id="view-dossier" class="app-view active" aria-labelledby="dossier-main-title">
+        <div class="dossier-header-hero">
+          <div class="hero-badge">🕵️ AGENCIA DE DETECTIVES DIGITALES &bull; 4.º PRIMARIA</div>
+          <h1 id="dossier-main-title" class="hero-title">
+            <span class="highlight-search">🔎 DETECTIVES</span> DIGITALES
+          </h1>
+          <p class="hero-subtitle">"Aprende a tomar buenas decisiones en el mundo digital"</p>
+          <div class="pedagogical-banner">
+            <span class="flow-step">👁️ Observar</span>
+            <span class="flow-arrow">➔</span>
+            <span class="flow-step">🔍 Investigar</span>
+            <span class="flow-arrow">➔</span>
+            <span class="flow-step">🔗 Relacionar</span>
+            <span class="flow-arrow">➔</span>
+            <span class="flow-step">⚖️ Decidir</span>
+            <span class="flow-arrow">➔</span>
+            <span class="flow-step">✅ Comprobar</span>
+            <span class="flow-arrow">➔</span>
+            <span class="flow-step">🧠 Reflexionar</span>
+          </div>
+        </div>
+
+        <!-- CUADRÍCULA DE LOS 6 CASOS PRINCIPALES -->
+        <div class="cases-grid-section">
+          <h2 class="section-title">📂 Casos de Investigación Abiertos</h2>
+          <p class="section-lead">Selecciona un expediente para comenzar tu investigación. Cada caso contiene 3 etapas: <strong>Investigar</strong> pistas, <strong>Resolver</strong> la situación y <strong>Reflexionar</strong> ante un nuevo reto.</p>
+
+          <div class="dossier-cards-grid" id="cases-cards-container">
+            <!-- Renderizado dinámico desde script.js para Casos 1 a 6 -->
+          </div>
+        </div>
+
+        <!-- SECCIÓN ESPECIAL: CASO FINAL DE SOFÍA -->
+        <div class="final-case-banner-card" id="final-case-card">
+          <div class="final-card-left">
+            <div class="final-card-badge">🧩 CASO FINAL INTEGRAL</div>
+            <h3 class="final-card-title">El Día Digital de Sofía</h3>
+            <p class="final-card-desc">
+              Sofía necesita usar el computador durante todo un día escolar y en casa. Cinco situaciones imprevistas ocurrirán una tras otra. ¿Tienes las habilidades para guiarla de forma segura y responsable?
+            </p>
+            <div class="final-card-stages-preview">
+              <span>💧 Entorno</span> &bull; 
+              <span>📦 Descargas</span> &bull; 
+              <span>🔐 Privacidad</span> &bull; 
+              <span>❤️ Convivencia</span> &bull; 
+              <span>🚨 Alertas</span>
+            </div>
+          </div>
+          <div class="final-card-right">
+            <div class="final-card-status" id="final-case-status-box">
+              <span class="lock-icon" id="final-case-lock-icon">🔒</span>
+              <span class="status-text" id="final-case-status-text">Completa los 6 casos para desbloquear</span>
+            </div>
+            <button id="btn-start-final-case" class="btn-primary btn-large" disabled>
+              <span>Comenzar Caso Final</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- GUÍA DE HABILIDADES DEL DETECTIVE -->
+        <div class="skills-overview-strip">
+          <div class="skill-mini-badge" title="Protección de datos y contraseñas">
+            <span class="skill-icon">🔐</span>
+            <span class="skill-title">Seguridad</span>
+            <span class="skill-meter" id="mini-skill-sec">0/5</span>
+          </div>
+          <div class="skill-mini-badge" title="Cuidado físico de los dispositivos">
+            <span class="skill-icon">🖥️</span>
+            <span class="skill-title">Responsabilidad</span>
+            <span class="skill-meter" id="mini-skill-resp">0/5</span>
+          </div>
+          <div class="skill-mini-badge" title="Buen trato y empatía en chats">
+            <span class="skill-icon">❤️</span>
+            <span class="skill-title">Respeto</span>
+            <span class="skill-meter" id="mini-skill-resp-soc">0/5</span>
+          </div>
+          <div class="skill-mini-badge" title="Detección de trampas y engaños">
+            <span class="skill-icon">🧠</span>
+            <span class="skill-title">Pensamiento Crítico</span>
+            <span class="skill-meter" id="mini-skill-crit">0/5</span>
+          </div>
+          <div class="skill-mini-badge" title="Saber cuándo consultar y frenar">
+            <span class="skill-icon">🆘</span>
+            <span class="skill-title">Autoprotección</span>
+            <span class="skill-meter" id="mini-skill-help">0/5</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- VISTA 2: INVESTIGADOR DE CASO (CASOS 1 AL 6)                  -->
+      <!-- ============================================================ -->
+      <section id="view-case-runner" class="app-view" aria-label="Investigador de Caso">
+        
+        <!-- Cabecera del Caso Activo -->
+        <div class="case-runner-header">
+          <div class="case-header-left">
+            <span class="case-number-tag" id="runner-case-number">CASO 1</span>
+            <h2 class="case-title" id="runner-case-title">El Computador en Peligro</h2>
+            <span class="case-concept-badge" id="runner-case-concept">Concepto: Cuidar los dispositivos</span>
+          </div>
+          
+          <!-- Indicador de las 3 Etapas Pedagógicas -->
+          <div class="stage-stepper" role="navigation" aria-label="Progreso de etapas del caso">
+            <div class="step-node active" id="step-node-1" data-step="1">
+              <span class="step-num">1</span>
+              <span class="step-label">🔎 Investiga</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-node" id="step-node-2" data-step="2">
+              <span class="step-num">2</span>
+              <span class="step-label">🧩 Resuelve</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-node" id="step-node-3" data-step="3">
+              <span class="step-num">3</span>
+              <span class="step-label">🧠 Reflexiona</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instrucción de la etapa -->
+        <div class="stage-instruction-card" id="stage-instruction-box">
+          <div class="instruction-icon" id="stage-instruction-icon">🔎</div>
+          <div class="instruction-content">
+            <h3 class="instruction-title" id="stage-instruction-title">Etapa 1: Observa y encuentra las pistas</h3>
+            <p class="instruction-desc" id="stage-instruction-text">
+              Explora la escena con atención. Haz clic sobre los elementos sospechosos que podrían poner en riesgo el equipo.
+            </p>
+          </div>
+          <div class="instruction-feedback-counter" id="stage-counter-pill">
+            <span id="stage-counter-current">0</span> / <span id="stage-counter-total">5</span> pistas
+          </div>
+        </div>
+
+        <!-- CONTENEDOR DINÁMICO DEL ESCENARIO DEL CASO -->
+        <div class="interactive-stage-viewport" id="stage-dynamic-container">
+          <!-- Aquí se inyecta el HTML específico de cada caso y etapa -->
+        </div>
+
+        <!-- BARRA INFERIOR DE ACCIONES Y VALIDACIÓN -->
+        <div class="stage-footer-actions">
+          <div class="footer-status-msg" id="runner-status-feedback">
+            <span class="status-msg-icon">💡</span>
+            <span class="status-msg-text" id="runner-status-text">Examina con cuidado antes de tomar decisiones.</span>
+          </div>
+          <div class="footer-buttons-group">
+            <button id="btn-verify-action" class="btn-primary">
+              <span>Comprobar Deducción</span>
+              <span>🔍</span>
+            </button>
+            <button id="btn-next-stage" class="btn-success" style="display: none;">
+              <span>Siguiente Etapa</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- VISTA 3: CASO FINAL - EL DÍA DIGITAL DE SOFÍA                 -->
+      <!-- ============================================================ -->
+      <section id="view-final-story" class="app-view" aria-label="Caso Final El Día Digital de Sofía">
+        <div class="final-story-header">
+          <div class="story-header-meta">
+            <span class="story-tag">🧩 CASO FINAL INTEGRAL</span>
+            <h2 class="story-title">El Día Digital de Sofía</h2>
+            <p class="story-sub">Acompaña a Sofía resolviendo los 5 retos que enfrentará en su jornada escolar y en casa.</p>
+          </div>
+          <div class="story-stepper" id="story-stepper-dots">
+            <span class="story-dot active" title="Situación 1: Entorno de trabajo">1</span>
+            <span class="story-dot" title="Situación 2: Descargas inesperadas">2</span>
+            <span class="story-dot" title="Situación 3: Privacidad en línea">3</span>
+            <span class="story-dot" title="Situación 4: Respeto en el chat">4</span>
+            <span class="story-dot" title="Situación 5: Alerta sospechosa">5</span>
+          </div>
+        </div>
+
+        <!-- Ciclo Cognitivo de 5 Fases para la Situación Actual -->
+        <div class="cognitive-cycle-tabs" id="cognitive-cycle-bar">
+          <div class="cycle-tab active" data-phase="observe">1. Observar</div>
+          <div class="cycle-tab" data-phase="analyze">2. Analizar</div>
+          <div class="cycle-tab" data-phase="act">3. Actuar</div>
+          <div class="cycle-tab" data-phase="verify">4. Comprobar</div>
+          <div class="cycle-tab" data-phase="learn">5. Aprender</div>
+        </div>
+
+        <!-- Contenedor del reto actual de Sofía -->
+        <div class="story-scenario-viewport" id="story-dynamic-container">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+        <div class="story-footer-nav">
+          <div class="story-consequence-preview" id="story-consequence-feedback"></div>
+          <button id="btn-story-continue" class="btn-primary btn-large">
+            <span>Siguiente Fase</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- MODAL 1: MODAL DE PISTA PEDAGÓGICA (LUPA 🔎)                  -->
+    <!-- ============================================================ -->
+    <div id="modal-hint" class="app-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card modal-hint-card">
+        <div class="modal-head">
+          <div class="modal-title-with-icon">
+            <span class="modal-icon">🔎</span>
+            <h3>Pista del Detective</h3>
+          </div>
+          <button class="modal-btn-close" id="btn-close-hint" aria-label="Cerrar modal de pista">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="hint-warning-box" id="hint-cost-notice">
+            <span class="warning-icon">⭐</span>
+            <p>Usar una pista consumirá <strong>1 estrella de bonificación</strong> de este caso. ¿Deseas revelarla o prefieres intentar deducirlo tú mismo?</p>
+          </div>
+          <div class="hint-text-revealed" id="hint-content-box" style="display: none;">
+            <p id="hint-text-target">Texto de pista...</p>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button id="btn-confirm-reveal-hint" class="btn-primary">Revelar Pista (-1 ⭐)</button>
+          <button id="btn-cancel-hint" class="btn-secondary">Pensaré un poco más</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL 2: MICROAPRENDIZAJE "💡 RECUERDA" Y RETROALIMENTACIÓN   -->
+    <!-- ============================================================ -->
+    <div id="modal-remember" class="app-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card modal-feedback-card">
+        <div class="modal-head feedback-head" id="remember-head-style">
+          <div class="modal-title-with-icon">
+            <span class="modal-icon" id="remember-icon">💡</span>
+            <h3 id="remember-modal-title">¡Gran Deducción, Detective!</h3>
+          </div>
+          <button class="modal-btn-close" id="btn-close-remember" aria-label="Cerrar">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Tarjeta de aprendizaje clave -->
+          <div class="remember-quote-card">
+            <div class="quote-header">RECUERDA SIEMPRE</div>
+            <p class="quote-text" id="remember-quote-text">
+              "Antes de instalar algo, pregunta y verifica."
+            </p>
+          </div>
+
+          <!-- Explicación pedagógica del por qué -->
+          <div class="pedagogical-why-box">
+            <h4>¿Por qué es importante esta decisión?</h4>
+            <p id="remember-explanation-text">
+              Explicación formativa detallada...
+            </p>
+          </div>
+
+          <!-- Habilidad reforzada -->
+          <div class="skill-boost-indicator" id="remember-skill-boost">
+            <span class="boost-icon">🛡️</span>
+            <span class="boost-label">Habilidad reforzada: <strong>Seguridad Digital (+1⭐)</strong></span>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button id="btn-remember-continue" class="btn-primary btn-large">
+            <span>Continuar Caso</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL 3: TABLERO DE HABILIDADES DIGITALES                    -->
+    <!-- ============================================================ -->
+    <div id="modal-skills" class="app-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card modal-skills-card">
+        <div class="modal-head">
+          <div class="modal-title-with-icon">
+            <span class="modal-icon">📊</span>
+            <h3>Mis Habilidades Digitales</h3>
+          </div>
+          <button class="modal-btn-close" id="btn-close-skills" aria-label="Cerrar">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="skills-intro">
+            Como detective digital, tus decisiones demuestran qué tan preparado estás para cuidar tus equipos, proteger tus datos y convivir con respeto:
+          </p>
+
+          <div class="skills-bars-container">
+            <!-- 1. Seguridad -->
+            <div class="skill-row">
+              <div class="skill-row-meta">
+                <span class="row-icon">🔐</span>
+                <span class="row-title">Seguridad (Protege datos y contraseñas)</span>
+                <span class="row-stars" id="stars-sec">⭐⭐⭐⭐⭐</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill fill-sec" id="bar-sec" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 2. Responsabilidad -->
+            <div class="skill-row">
+              <div class="skill-row-meta">
+                <span class="row-icon">🖥️</span>
+                <span class="row-title">Responsabilidad (Cuida los dispositivos)</span>
+                <span class="row-stars" id="stars-resp">⭐⭐⭐⭐⭐</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill fill-resp" id="bar-resp" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 3. Respeto -->
+            <div class="skill-row">
+              <div class="skill-row-meta">
+                <span class="row-icon">❤️</span>
+                <span class="row-title">Respeto (Trata correctamente a los demás)</span>
+                <span class="row-stars" id="stars-soc">⭐⭐⭐⭐⭐</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill fill-soc" id="bar-soc" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 4. Pensamiento Crítico -->
+            <div class="skill-row">
+              <div class="skill-row-meta">
+                <span class="row-icon">🧠</span>
+                <span class="row-title">Pensamiento Crítico (Detecta señales de riesgo)</span>
+                <span class="row-stars" id="stars-crit">⭐⭐⭐⭐⭐</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill fill-crit" id="bar-crit" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 5. Autoprotección -->
+            <div class="skill-row">
+              <div class="skill-row-meta">
+                <span class="row-icon">🆘</span>
+                <span class="row-title">Autoprotección (Sabe cuándo pedir ayuda)</span>
+                <span class="row-stars" id="stars-help">⭐⭐⭐⭐⭐</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill fill-help" id="bar-help" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diagnóstico Formativo del Detective -->
+          <div class="detective-rank-card">
+            <div class="rank-badge" id="detective-rank-badge">🕵️ DETECTIVE EN APRENDIZAJE</div>
+            <p id="detective-rank-advice">
+              ¡Sigue investigando con atención cada expediente para fortalecer tus habilidades digitales!
+            </p>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-primary" id="btn-close-skills-bottom">Aceptar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL 4: PANEL PEDAGÓGICO PARA EL DOCENTE                     -->
+    <!-- ============================================================ -->
+    <div id="modal-teacher" class="app-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card modal-teacher-card">
+        <div class="modal-head teacher-head">
+          <div class="modal-title-with-icon">
+            <span class="modal-icon">🧑‍🏫</span>
+            <h3>Panel de Seguimiento Pedagógico</h3>
+          </div>
+          <button class="modal-btn-close" id="btn-close-teacher" aria-label="Cerrar">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="teacher-grid-stats">
+            <div class="tstat-card">
+              <span class="tstat-val" id="tstat-completed-cases">0 / 6</span>
+              <span class="tstat-lbl">Casos Resueltos</span>
+            </div>
+            <div class="tstat-card">
+              <span class="tstat-val" id="tstat-accuracy">0%</span>
+              <span class="tstat-lbl">Tasa de Deducción Directa</span>
+            </div>
+            <div class="tstat-card">
+              <span class="tstat-val" id="tstat-hints-used">0</span>
+              <span class="tstat-lbl">Pistas Solicitadas</span>
+            </div>
+            <div class="tstat-card">
+              <span class="tstat-val" id="tstat-total-time">0 min</span>
+              <span class="tstat-lbl">Tiempo de Actividad</span>
+            </div>
+          </div>
+
+          <!-- Pautas para la observación del docente en clase -->
+          <div class="teacher-observation-guide">
+            <h4>📋 ¿Qué observar durante la sesión en clase?</h4>
+            <ul class="observation-list">
+              <li>
+                <strong>¿El estudiante busca pistas antes de actuar?</strong>
+                <span>Verificar si explora la pantalla y lee los detalles antes de pulsar botones apresuradamente.</span>
+              </li>
+              <li>
+                <strong>¿Puede explicar por qué una información es personal?</strong>
+                <span>Comprobar si distingue entre gustos generales y datos que permiten localizarlo o vulnerar su cuenta.</span>
+              </li>
+              <li>
+                <strong>¿Reconoce situaciones ambiguas?</strong>
+                <span>Evaluar si identifica la presión de tiempo ("¡Instálalo YA!") y las ofertas engañosas ("¡Ganaste un premio!").</span>
+              </li>
+              <li>
+                <strong>¿Comprende que una acción digital puede afectar a otra persona?</strong>
+                <span>Observar su empatía al clasificar y reconstruir comentarios respetuosos en chats escolares.</span>
+              </li>
+              <li>
+                <strong>¿Sabe cuándo pedir ayuda?</strong>
+                <span>Constatar si recurre al docente o familia frente a alertas sospechosas o solicitudes privadas.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Desglose por caso de investigación -->
+          <div class="cases-performance-table-box">
+            <h4>Detalle por Caso de Aprendizaje</h4>
+            <table class="t-report-table">
+              <thead>
+                <tr>
+                  <th>Caso</th>
+                  <th>Concepto</th>
+                  <th>Etapas</th>
+                  <th>Pistas</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="teacher-table-body">
+                <!-- Inyectado por JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button id="btn-print-teacher-report" class="btn-primary">🖨️ Imprimir / Guardar Informe</button>
+          <button id="btn-close-teacher-bottom" class="btn-secondary">Cerrar Panel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICADOR TOAST RÁPIDO -->
+    <div id="detective-toast" class="toast-box" aria-live="polite"></div>
+
+  </div>
+
+  <!-- SCRIPT PRINCIPAL VANILLA JS -->
+  <script src="script.js"></script>
+</body>
+</html>
